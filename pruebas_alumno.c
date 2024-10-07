@@ -35,8 +35,10 @@ bool sumar_elementos(void* elemento, void* suma) {
 // ----- PRUEBAS CREAR
 void prueba_crear_abb()
 {
-	pa2m_afirmar(abb_crear(comparador_int) != NULL,
+    abb_t *abb = abb_crear(comparador_int);
+	pa2m_afirmar(abb != NULL,
 		     "Se puede crear un ABB");
+	abb_destruir(abb);
 }
 
 // ----- PRUEBAS DESTRUIR
@@ -407,6 +409,7 @@ void iterar_postorden_aplica_funcion_correctamente()
     pa2m_afirmar(suma == 30, "La suma de los elementos postorden es correcta");
     abb_destruir(abb);
 }
+
 // ----- VECTORIZADOR
 void vectorizar_inorden_guarda_en_vector_correctamente()
 {
@@ -483,7 +486,7 @@ int main()
     insertar_elementos_duplicados();
     insertar_multiples_elementos();
 
-    // QUITAR
+    // // QUITAR
     pa2m_nuevo_grupo("Pruebas funcion quitar");
     quitar_elementos_da_resultados_correctos();
     quitar_en_arbol_vacio_devuelve_false();
@@ -491,7 +494,7 @@ int main()
     quitar_nodo_con_un_hijo();
     quitar_nodo_con_dos_hijos();
 
-    // OBTENER
+    // // OBTENER
     pa2m_nuevo_grupo("Pruebas funcion obtener");
     obtener_elementos_devuelve_resultados_correctos();
     obtener_elemento_inexistente_devuelve_null();
