@@ -161,6 +161,7 @@ void quitar_elementos_da_resultados_correctos()
 		    "Se puede quitar el elemento 10");
 	pa2m_afirmar(encontrado == elemento1,
 		    "El elemento quitado es el correcto");
+	free(encontrado);
 
 	pa2m_afirmar(abb_cantidad(abb) == 2,
 		"El ABB tiene 2 elementos después de quitar uno");
@@ -486,7 +487,7 @@ int main()
     insertar_elementos_duplicados();
     insertar_multiples_elementos();
 
-    // // QUITAR
+    // QUITAR
     pa2m_nuevo_grupo("Pruebas funcion quitar");
     quitar_elementos_da_resultados_correctos();
     quitar_en_arbol_vacio_devuelve_false();
@@ -494,7 +495,7 @@ int main()
     quitar_nodo_con_un_hijo();
     quitar_nodo_con_dos_hijos();
 
-    // // OBTENER
+    // OBTENER
     pa2m_nuevo_grupo("Pruebas funcion obtener");
     obtener_elementos_devuelve_resultados_correctos();
     obtener_elemento_inexistente_devuelve_null();

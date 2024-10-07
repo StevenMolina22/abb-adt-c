@@ -10,11 +10,6 @@ valgrind-alumno: pruebas_alumno
 pruebas_alumno: src/*.c pruebas_alumno.c
 	$(CC) $(CFLAGS) src/*.c pruebas_alumno.c -o pruebas_alumno
 
-test: src/*.c pruebas_alumno.c
-	$(cc) $(cflags) src/*.c pruebas_alumno.c -o pruebas_alumno
-	./pruebas_alumno
-	rm -f ./pruebas_alumno
-
 valgrind-test: src/*.c pruebas_alumno.c
 	$(cc) $(cflags) src/*.c pruebas_alumno.c -o pruebas_alumno
 	valgrind ./pruebas_alumno

@@ -3,6 +3,10 @@
 #include <string.h>
 #include <stdio.h>
 #include "pokemon.h"
+/*
+    NOTA: Las funciones toman void* para poder ser utilizadas con abb_t
+    😢
+*/
 
 int comparar_nombre_pokemon(void *_p1, void *_p2)
 {
@@ -97,5 +101,10 @@ void buscar_pokemon(abb_t *pokedex)
 	struct pokemon buscado = { .nombre = nombre };
 	struct pokemon *encontrado = abb_obtener(
 		pokedex, &buscado);
-	print_pokemon(encontrado, NULL);
+	if (encontrado) {
+    	print_pokemon(encontrado, NULL);
+	}
+	else {
+        printf("Pokemon no encontrado\n");
+    }
 }
