@@ -3,6 +3,7 @@ CFLAGS =-std=c99 -Wall -Wconversion -Wtype-limits -pedantic -Werror -O2 -g
 CC = gcc
 
 all: clean valgrind-alumno
+run: clean tp valgrind-tp
 
 valgrind-alumno: pruebas_alumno
 	valgrind $(VALGRIND_FLAGS) ./pruebas_alumno
@@ -12,8 +13,7 @@ pruebas_alumno: src/*.c pruebas_alumno.c
 
 valgrind-test: src/*.c pruebas_alumno.c
 	$(cc) $(cflags) src/*.c pruebas_alumno.c -o pruebas_alumno
-	valgrind ./pruebas_alumno
-	rm -f ./pruebas_alumno
+	# valgrind ./pruebas_alumno
 
 valgrind-ejemplo: ejemplo
 	valgrind $(VALGRIND_FLAGS) ./ejemplo
@@ -23,6 +23,10 @@ ejemplo: src/*.c ejemplo.c
 
 tp: src/*.c tp_abb.c
 	$(CC) $(CFLAGS) src/*.c tp_abb.c -o tp_abb
+
+valgrind-tp: tp
+	valgrind $(VALGRIND_FLAGS) ./tp_abb pokedex.csv
+	rm -f ./tp_abb
 
 clean:
 	rm -f pruebas_alumno ejemplo
