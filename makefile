@@ -24,5 +24,9 @@ ejemplo: src/*.c ejemplo.c
 tp: src/*.c tp_abb.c
 	$(CC) $(CFLAGS) src/*.c tp_abb.c -o tp_abb
 
+valgrind-tp: tp
+	valgrind $(VALGRIND_FLAGS) ./tp_abb pokedex.csv
+	rm -f ./tp_abb
+
 clean:
 	rm -f pruebas_alumno ejemplo

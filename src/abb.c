@@ -13,10 +13,11 @@ nodo_t *nodo_crear(void *elemento)
 	return nodo;
 }
 
-static nodo_t *encontrar_minimo(nodo_t *nodo)
+static nodo_t *encontrar_maximo(nodo_t *nodo)
 {
-	while (nodo->izq != NULL)
-		nodo = nodo->izq;
+	while (nodo->der != NULL) {
+		nodo = nodo->der;
+	}
 	return nodo;
 }
 
@@ -65,7 +66,6 @@ static nodo_t *nodo_quitar(abb_t *abb, nodo_t *nodo, void *buscado,
 		return NULL;
 	}
 	int cmp = abb->comparador(buscado, nodo->elemento);
-
 	if (cmp > 0) { // Buscar en el subárbol derecho
 		nodo->der = nodo_quitar(abb, nodo->der, buscado, fue_removido,
 					encontrado);
@@ -79,16 +79,16 @@ static nodo_t *nodo_quitar(abb_t *abb, nodo_t *nodo, void *buscado,
 
 		if (nodo->izq == NULL && nodo->der == NULL)
 			return nodo_quitar_sin_hijos(nodo);
-
 		if (nodo->izq == NULL || nodo->der == NULL)
 			return nodo_quitar_un_hijo(nodo);
 
 		// Caso 3: Nodo con dos hijos
-		nodo_t *min_nodo = encontrar_minimo(nodo->der);
-		nodo->elemento =
-			min_nodo->elemento; // Reemplazar valor por el mínimo del subárbol derecho
-		nodo->der = nodo_quitar(abb, nodo->der, min_nodo->elemento,
-					fue_removido, &min_nodo->elemento);
+		nodo_t *max_nodo = encontrar_maximo(nodo->izq);
+		void *temp = nodo->elemento;
+		nodo->elemento = max_nodo->elemento;
+		max_nodo->elemento = temp;
+		nodo->izq = nodo_quitar(abb, nodo->izq, max_nodo->elemento,
+					fue_removido, &max_nodo->elemento);
 	}
 	return nodo;
 }
@@ -127,12 +127,11 @@ bool abb_insertar(abb_t *abb, void *elemento)
 
 bool abb_quitar(abb_t *abb, void *buscado, void **encontrado)
 {
-	if (!abb || !abb->raiz || !buscado) {
+	if (!abb || !buscado) {
 		return false;
 	}
 	bool removido = false;
 	abb->raiz = nodo_quitar(abb, abb->raiz, buscado, &removido, encontrado);
-
 	if (removido) {
 		abb->nodos--;
 	}
