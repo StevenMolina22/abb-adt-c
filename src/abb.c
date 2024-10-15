@@ -134,6 +134,9 @@ bool abb_quitar(abb_t *abb, void *buscado, void **encontrado)
 	abb->raiz = nodo_quitar(abb, abb->raiz, buscado, &removido, encontrado);
 	if (removido) {
 		abb->nodos--;
+		if (abb->nodos == 0)
+			abb->raiz =
+				NULL; // Ensure the root is NULL when the tree becomes empty
 	}
 	return removido;
 }
