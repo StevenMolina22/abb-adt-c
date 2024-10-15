@@ -99,12 +99,10 @@ void buscar_pokemon(abb_t *pokedex)
 	}
 
 	struct pokemon buscado = { .nombre = nombre };
-	struct pokemon *encontrado = abb_obtener(
-		pokedex, &buscado);
+	struct pokemon *encontrado = abb_obtener(pokedex, &buscado);
 	if (encontrado) {
-    	print_pokemon(encontrado, NULL);
+		print_pokemon(encontrado, NULL);
+	} else {
+		printf("Pokemon no encontrado\n");
 	}
-	else {
-        printf("Pokemon no encontrado\n");
-    }
 }
