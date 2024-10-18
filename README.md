@@ -38,18 +38,18 @@ Se implementaron las siguientes operaciones sobre el ABB:
 4. **Recorridos (`abb_iterar_inorden`, `abb_iterar_preorden`, `abb_iterar_postorden`)**: Recorren el ABB en los distintos órdenes.
 5. **Destrucción (`abb_destruir` y `abb_destruir_todo`)**: Libera la memoria asociada al árbol y sus elementos si es necesario.
 
-Se tomaron decisiones para garantizar eficiencia y evitar pérdida de memoria, por ejemplo, asegurando que `realloc` no cause pérdida de datos si falla y usando destructores personalizados para liberar memoria.
+Se tomaron decisiones para garantizar eficiencia y evitar pérdida de memoria, por ejemplo, asegurando que `realloc` no cause pérdida de datos si falla, usando calloc para inicializar memoria en 0 y usando destructores personalizados para liberar memoria.
 
-A continuación, se muestra un esquema básico del ABB:
+A continuación, se muestra un esquema básico de una posible configuracion del ABB:
 
 ```mermaid
 graph TD;
-    A[Raíz] --> B[Izquierda]
-    A --> C[Derecha]
-    B --> D[Hijo Izquierdo de B]
-    B --> E[Hijo Derecho de B]
-    C --> F[Hijo Izquierdo de C]
-    C --> G[Hijo Derecho de C]
+    A[Raíz] --> B[B (Izq)]
+    A --> C[C (Der)]
+    B --> D[Hijo Izq de B]
+    B --> E[Hijo Der de B]
+    C --> F[Hijo Izq de C]
+    C --> G[Hijo Der de C]
 ```
 
 ---
@@ -87,13 +87,15 @@ graph LR;
 
 ### ¿Qué es un Árbol Binario de Búsqueda?
 
-Un **árbol binario de búsqueda (ABB)** es una estructura en la que cada nodo contiene un valor y dos punteros: uno hacia el subárbol izquierdo y otro hacia el subárbol derecho. Los valores en el subárbol izquierdo son menores que los del nodo actual, y los del subárbol derecho son mayores.
+Un **árbol binario de búsqueda (ABB)** es un TDA en el que cada nodo contiene un valor y dos referencias a un par de hijos: uno hacia el subárbol izquierdo y otro hacia el subárbol derecho. Los valores en el subárbol izquierdo son menores que los del nodo actual, y los del subárbol derecho son mayores. Esto garantiza velocidades muy eficietes en los metodos del TDA
 
 #### Complejidad de Operaciones
 
-- **Inserción**: O(log n) en el mejor caso, O(n) en el peor caso (árbol degenerado).
+- **Inserción**: O(log n) en el mejor caso, O(n) en el peor caso.
 - **Búsqueda**: O(log n) en el mejor caso, O(n) en el peor caso.
 - **Eliminación**: O(log n) en el mejor caso, O(n) en el peor caso.
+
+(El peor caso es cuando el arbol se ha degenerado en una lista)
 
 #### Diagrama de Memoria
 
@@ -118,13 +120,44 @@ graph TD;
 ## Diagrama de memoria detallado
 
 ```mermaid
-graph TD;
-    A[Nodo Raíz] --> B[Nodo Izquierdo]
-    A --> C[Nodo Derecho]
-    B --> D[Nodo Hoja Izquierda]
-    B --> E[Nodo Hoja Derecha]
-    C --> F[Nodo Hoja Izquierda]
-    C --> G[Nodo Hoja Derecha]
+classDiagram
+    note "STACK"
+    class abb_ptr["abb_t*"] {
+        Puntero a estructura ABB
+    }
+
+    note "HEAP"
+    class abb["abb_t"] {
+        size_t nodos
+        nodo_t* raiz
+        int (*comparador)(void*, void*)
+    }
+
+    note "HEAP"
+    class nodo1["nodo_t"] {
+        void* elemento
+        nodo_t* izq
+        nodo_t* der
+    }
+
+    note "HEAP"
+    class nodo2["nodo_t"] {
+        void* elemento
+        nodo_t* izq
+        nodo_t* der
+    }
+
+    note "HEAP"
+    class nodo3["nodo_t"] {
+        void* elemento
+        nodo_t* izq
+        nodo_t* der
+    }
+
+    abb_ptr --> abb : apunta a
+    abb --> nodo1 : raiz
+    nodo1 --> nodo2 : izq
+    nodo1 --> nodo3 : der
 ```
 
 En este diagrama se visualizan las relaciones entre nodos en el ABB, donde cada nodo apunta a sus hijos izquierdos y derechos.

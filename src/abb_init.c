@@ -16,12 +16,10 @@ abb_t *abb_crear(int (*comparador)(void *, void *))
 {
 	if (!comparador)
 		return NULL;
-	abb_t *abb = malloc(sizeof(abb_t));
+	abb_t *abb = calloc(sizeof(abb_t), 1);
 	if (!abb)
 		return NULL;
-	abb->raiz = NULL;
 	abb->comparador = comparador;
-	abb->nodos = 0;
 	return abb;
 }
 
