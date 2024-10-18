@@ -15,84 +15,12 @@ nodo_t *nodo_crear(void *elemento)
 
 static nodo_t *encontrar_maximo(nodo_t *nodo)
 {
-	while (nodo->der != NULL) {
+	while (nodo->der)
 		nodo = nodo->der;
-	}
 	return nodo;
 }
 
 // ----- FIN FUNCIONES AUXILIARES
-
-static nodo_t *nodo_insertar(abb_t *abb, nodo_t *nodo, void *elemento)
-{
-	if (nodo == NULL) {
-		nodo_t *nuevo = nodo_crear(elemento);
-		if (nuevo)
-			abb->nodos++;
-		return nuevo;
-	}
-
-	if (!abb->comparador)
-		return NULL;
-	int cmp = abb->comparador(elemento, nodo->elemento);
-	if (cmp > 0) {
-		nodo->der = nodo_insertar(abb, nodo->der, elemento);
-	} else {
-		nodo->izq = nodo_insertar(abb, nodo->izq, elemento);
-	}
-	return nodo;
-}
-
-static nodo_t *nodo_quitar_sin_hijos(nodo_t *nodo)
-{
-	if (nodo)
-		free(nodo);
-	return NULL;
-}
-
-static nodo_t *nodo_quitar_un_hijo(nodo_t *nodo)
-{
-	nodo_t *temp = (nodo->izq != NULL) ? nodo->izq : nodo->der;
-	if (nodo)
-		free(nodo);
-	return temp;
-}
-
-static nodo_t *nodo_quitar(abb_t *abb, nodo_t *nodo, void *buscado,
-			   bool *fue_removido, void **encontrado)
-{
-	if (nodo == NULL || !abb->comparador) {
-		*fue_removido = false;
-		return NULL;
-	}
-	int cmp = abb->comparador(buscado, nodo->elemento);
-	if (cmp > 0) { // Buscar en el subárbol derecho
-		nodo->der = nodo_quitar(abb, nodo->der, buscado, fue_removido,
-					encontrado);
-	} else if (cmp < 0) { // Buscar en el subárbol izquierdo
-		nodo->izq = nodo_quitar(abb, nodo->izq, buscado, fue_removido,
-					encontrado);
-	} else { // Nodo encontrado
-		if (encontrado)
-			*encontrado = nodo->elemento;
-		*fue_removido = true;
-
-		if (nodo->izq == NULL && nodo->der == NULL)
-			return nodo_quitar_sin_hijos(nodo);
-		if (nodo->izq == NULL || nodo->der == NULL)
-			return nodo_quitar_un_hijo(nodo);
-
-		// Caso 3: Nodo con dos hijos
-		nodo_t *max_nodo = encontrar_maximo(nodo->izq);
-		void *temp = nodo->elemento;
-		nodo->elemento = max_nodo->elemento;
-		max_nodo->elemento = temp;
-		nodo->izq = nodo_quitar(abb, nodo->izq, max_nodo->elemento,
-					fue_removido, &max_nodo->elemento);
-	}
-	return nodo;
-}
-
 static nodo_t *nodo_buscar(nodo_t *nodo, void *elemento,
 			   int (*comparador)(void *, void *), nodo_t **padre)
 {
@@ -112,11 +40,76 @@ static nodo_t *nodo_buscar(nodo_t *nodo, void *elemento,
 		return nodo_buscar(nodo->der, elemento, comparador, padre);
 	}
 }
+static nodo_t *nodo_insertar(abb_t *abb, nodo_t *nodo, void *elemento)
+{
+	if (!nodo) {
+		nodo_t *nuevo = nodo_crear(elemento);
+		if (nuevo)
+			abb->nodos++;
+		return nuevo;
+	}
+
+	if (!abb->comparador)
+		return NULL;
+	int cmp = abb->comparador(elemento, nodo->elemento);
+	if (cmp > 0) {
+		nodo->der = nodo_insertar(abb, nodo->der, elemento);
+	} else {
+		nodo->izq = nodo_insertar(abb, nodo->izq, elemento);
+	}
+	return nodo;
+}
+
+static nodo_t *nodo_quitar_un_hijo(nodo_t *nodo)
+{
+	// Funcion asume que nodo existe y tiene un solo hijo
+	nodo_t *temp = (nodo->izq) ? nodo->izq : nodo->der;
+	free(nodo);
+	return temp;
+}
+
+static nodo_t *nodo_quitar(abb_t *abb, nodo_t *nodo, void *buscado,
+			   bool *fue_removido, void **encontrado)
+{
+	if (!nodo || !abb->comparador) {
+		*fue_removido = false;
+		return NULL;
+	}
+	int cmp = abb->comparador(buscado, nodo->elemento);
+	if (cmp > 0) { // Buscar en subarbol derecho
+		nodo->der = nodo_quitar(abb, nodo->der, buscado, fue_removido,
+					encontrado);
+	} else if (cmp < 0) { // Buscar en subarbol izquierdo
+		nodo->izq = nodo_quitar(abb, nodo->izq, buscado, fue_removido,
+					encontrado);
+	} else { // Nodo encontrado
+		if (encontrado)
+			*encontrado = nodo->elemento;
+		*fue_removido = true;
+
+		if (!nodo->izq && !nodo->der) {
+			free(nodo);
+			return NULL;
+		}
+
+		if (!nodo->izq || !nodo->der)
+			return nodo_quitar_un_hijo(nodo);
+
+		// Caso: Nodo con dos hijos
+		nodo_t *max_nodo = encontrar_maximo(nodo->izq);
+		void *temp = nodo->elemento;
+		nodo->elemento = max_nodo->elemento;
+		max_nodo->elemento = temp;
+		nodo->izq = nodo_quitar(abb, nodo->izq, max_nodo->elemento,
+					fue_removido, &max_nodo->elemento);
+	}
+	return nodo;
+}
 
 // ----- FUNCIONES DEL ABB -----
 bool abb_insertar(abb_t *abb, void *elemento)
 {
-	if (abb == NULL)
+	if (!abb)
 		return false;
 
 	size_t nodos_iniciales = abb->nodos;
@@ -127,16 +120,13 @@ bool abb_insertar(abb_t *abb, void *elemento)
 
 bool abb_quitar(abb_t *abb, void *buscado, void **encontrado)
 {
-	if (!abb || !buscado) {
+	if (!abb) {
 		return false;
 	}
 	bool removido = false;
 	abb->raiz = nodo_quitar(abb, abb->raiz, buscado, &removido, encontrado);
 	if (removido) {
 		abb->nodos--;
-		if (abb->nodos == 0)
-			abb->raiz =
-				NULL; // Ensure the root is NULL when the tree becomes empty
 	}
 	return removido;
 }
