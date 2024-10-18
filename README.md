@@ -44,8 +44,8 @@ A continuación, se muestra un esquema básico de una posible configuracion del 
 
 ```mermaid
 graph TD;
-    A[Raíz] --> B[B (Izq)]
-    A --> C[C (Der)]
+    A[Raíz] --> B["B (Izq)"]
+    A --> C["C (Der)"]
     B --> D[Hijo Izq de B]
     B --> E[Hijo Der de B]
     C --> F[Hijo Izq de C]
@@ -121,37 +121,32 @@ graph TD;
 
 ```mermaid
 classDiagram
-    note "STACK"
-    class abb_ptr["abb_t*"] {
+    class abb_ptr["abb_t* (Stack)"] {
         Puntero a estructura ABB
     }
 
-    note "HEAP"
-    class abb["abb_t"] {
-        size_t nodos
-        nodo_t* raiz
-        int (*comparador)(void*, void*)
+    class abb["abb_t (Heap)"] {
+        nodos
+        *raiz
+        (*comparador)(*, *)
     }
 
-    note "HEAP"
-    class nodo1["nodo_t"] {
-        void* elemento
-        nodo_t* izq
-        nodo_t* der
+    class nodo1["nodo_t (Heap)"] {
+        *elemento
+        *izq
+        *der
     }
 
-    note "HEAP"
-    class nodo2["nodo_t"] {
-        void* elemento
-        nodo_t* izq
-        nodo_t* der
+    class nodo2["nodo_t (Heap)"] {
+        *elemento
+        *izq
+        *der
     }
 
-    note "HEAP"
-    class nodo3["nodo_t"] {
-        void* elemento
-        nodo_t* izq
-        nodo_t* der
+    class nodo3["nodo_t (Heap)"] {
+        *elemento
+        *izq
+        *der
     }
 
     abb_ptr --> abb : apunta a
