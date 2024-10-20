@@ -4,12 +4,10 @@
 // ----- FUNCIONES AUXILIARES -----
 nodo_t *nodo_crear(void *elemento)
 {
-	nodo_t *nodo = malloc(sizeof(nodo_t));
+	nodo_t *nodo = calloc(sizeof(nodo_t), 1);
 	if (!nodo)
 		return NULL;
 	nodo->elemento = elemento;
-	nodo->izq = NULL;
-	nodo->der = NULL;
 	return nodo;
 }
 
