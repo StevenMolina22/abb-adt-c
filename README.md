@@ -84,18 +84,113 @@ graph LR;
 ---
 
 ## Respuestas a las preguntas teóricas
+### Conceptos Básicos
 
-### ¿Qué es un Árbol Binario de Búsqueda?
+#### 1. ¿Qué es un árbol?
 
-Un **árbol binario de búsqueda (ABB)** es un TDA en el que cada nodo contiene un valor y dos referencias a un par de hijos: uno hacia el subárbol izquierdo y otro hacia el subárbol derecho. Los valores en el subárbol izquierdo son menores que los del nodo actual, y los del subárbol derecho son mayores. Esto garantiza velocidades muy eficietes en los metodos del TDA
+Un **árbol** es una estructura de datos jerárquica que se compone de **nodos** conectados. El árbol tiene un nodo especial llamado **raíz**, que es el primer nodo con el que se empiezan a hacer conexiones con los **hijos** (otros nodos). Cada nodo puede tener múltiples hijos, pero sólo tiene un único padre (exceptuando la raiz que es la excepciòn a esta regla).
 
-#### Complejidad de Operaciones
+#### Propiedades de un Árbol:
+- **Raíz**: Nodo principal.
+- **Hojas**: Nodos que no tienen hijos.
+- **Altura**: Número de aristas desde la raíz hasta el nodo más profundo.
+- **Nivel**: Distancia de un nodo a la raíz.
+- **Subárbol**: Cualquier nodo y todos sus descendientes.
 
-- **Inserción**: O(log n) en el mejor caso, O(n) en el peor caso.
-- **Búsqueda**: O(log n) en el mejor caso, O(n) en el peor caso.
-- **Eliminación**: O(log n) en el mejor caso, O(n) en el peor caso.
+#### Diagrama de un Árbol:
+```
+.      1 (Raíz)
+      /  \
+     2    3
+    /    / \
+   4    5   6
+```
 
-(El peor caso es cuando el arbol se ha degenerado en una lista)
+#### 2. ¿Qué es un Árbol Binario?
+
+Un **árbol binario** es un tipo de árbol en el que cada nodo tiene como máximo **dos hijos**, usualmente con los nombres de **hijo izquierdo** e **hijo derecho**. Un árbol binario no impone ninguna restricción particular en los valores almacenados en los nodos usualmente, por lo que se les considerarian genericos.
+
+#### Operaciones Básicas de un Árbol Binario:
+- **Inserción**: Añadir un nodo en una posición especìfica.
+- **Búsqueda**: Buscar un valor específico en el árbol.
+- **Recorridos**: Preorden, inorden, postorden, para visitar todos los nodos del árbol.
+
+#### Complejidad de Operaciones:
+- **Inserción**: O(n) para mayoria de los casos.
+- **Búsqueda**: O(n) para mayoria de los casos.
+- **Recorridos**: O(n) para mayoria de los casos.
+
+#### Diagrama de un Árbol Binario:
+```
+.      1
+      / \
+     2   3
+    / \
+   4   5
+```
+
+#### 3. ¿Qué es un Árbol Binario de Búsqueda (ABB)?
+
+Un **árbol binario de búsqueda (ABB)** es un árbol binario con una propiedad especial: **cada nodo del subárbol izquierdo** contiene un valor **menor** que el nodo actual, y **cada nodo del subárbol derecho** contiene un valor **mayor** que el nodo actual.
+
+#### Importancia del ABB:
+Esta propiedad del ABB permite realizar búsquedas, inserciones y eliminaciones de manera eficiente, logrando una complejidad logarítmica en la mayoría de los casos, siempre cuando haya habido una inserciòn adecuado o se haya mantenido el arbol balanceado.
+
+#### Diagrama de un ABB:
+```
+.      8
+      / \
+     3   10
+    / \    \
+   1   6    14
+      / \   /
+     4   7 13
+```
+En este ejemplo:
+- El nodo con valor 8 tiene un subárbol izquierdo con valores menores que 8 (1, 3, 6, 4, 7).
+- El subárbol derecho tiene valores mayores que 8 (10, 14, 13).
+
+### Operaciones Básicas del ABB
+
+1. **Inserción**: Se compara el valor a insertar con el nodo actual. Si es menor, se mueve al subárbol izquierdo; si es mayor, al derecho, y se continúa hasta encontrar una posición vacía.
+
+   - **Mejor caso**: O(log n), cuando el árbol está balanceado.
+   - **Peor caso**: O(n), cuando el árbol está degenerado (similar a una lista enlazada).
+
+2. **Búsqueda**: Similar a la inserción. Se compara el valor buscado con el nodo actual y se mueve a la izquierda o derecha, dependiendo de si el valor es menor o mayor.
+
+   - **Mejor caso**: O(log n).
+   - **Peor caso**: O(n).
+
+3. **Eliminación**: Se debe considerar tres casos:
+   - El nodo a eliminar es una hoja (sin hijos).
+   - El nodo a eliminar tiene un solo hijo.
+   - El nodo a eliminar tiene dos hijos (en este caso, se reemplaza por el sucesor inorden, el valor mínimo del subárbol derecho o el máximo del subárbol izquierdo).
+
+   - **Mejor caso**: O(log n).
+   - **Peor caso**: O(n).
+
+#### Diagrama de Eliminación:
+Si eliminamos el nodo con valor 10 del árbol:
+```
+.      8
+      / \
+     3   13
+    / \    \
+   1   6    14
+      / \
+     4   7
+```
+El sucesor inorden de 10 (que es 13) lo reemplaza.
+
+### Importancia de la Estructura y el Balanceo
+
+Un árbol binario de búsqueda es útil para manejar datos de manera eficiente, pero si el árbol se desbalancea, sus ventajas desaparecen, ya que su complejidad puede degenerarse a O(n). Para evitar esto, se utilizan estructuras como los **árboles balanceados** (AVL o Red-Black trees), que garantizan que la altura del árbol se mantenga en log(n) y que el ABB no se degenere en lista, asegurando tiempos óptimos para operaciones comunes.
+
+En resumen:
+- **Árbol**: Una estructura básica con conexiones jerárquicas.
+- **Árbol Binario**: Un árbol con a lo sumo dos hijos por nodo.
+- **ABB**: Un árbol binario que garantiza que los nodos en la izquierda son menores y los de la derecha son mayores, mejorando la eficiencia en búsquedas e inserciones.
 
 #### Diagrama de Memoria
 
@@ -111,9 +206,12 @@ graph TD;
 
 ### Decisiones de diseño
 
-1. **Uso de funciones recursivas**: La mayor parte de las operaciones del ABB (inserción, eliminación, búsqueda) se implementaron de forma recursiva para simplificar el manejo de los punteros de cada nodo.
+1. **Uso de funciones recursivas**: La mayor parte de las operaciones del ABB (inserción, eliminación, búsqueda) se implementaron de forma recursiva para simplificar el manejo de los punteros de cada nodo, para mayor facilidad y legibilidad tambien se usaron funciones wrapper.
 
-2. **Manejo de memoria**: Se empleó un destructor para liberar correctamente los elementos almacenados en el ABB cuando se destruye la estructura, ya que el ABB no conoce el tipo de los elementos.
+2. **Manejo de memoria**: Se empleó un destructor para liberar correctamente los elementos almacenados en el **ABB** cuando se destruye la estructura, dando opciones para liberar de forma simple o liberar tambien los elementos dando una funcion destructora, ya que el **ABB** no conoce el tipo de los elementos, es completamente agnostico a lo que guarda el usuario del **TDA**.
+
+3. **Funcion Quitar**: Esta funcion fue de lejos la mas compleja de implementar, ya que se deben considerar 3 casos, el nodo a eliminar es una hoja, el nodo a eliminar tiene un solo hijo y el nodo a eliminar tiene dos hijos, en este ultimo caso se debe reemplazar el nodo a eliminar por el predecesor inorden.
+Fue necesario implementar funciones auxiliares para algunos de los casos, como la funcion **nodo_quitar_hoja**, etc. Además, de crear una funcion auxiliar para encontrar el predecesor inorden.
 
 ---
 
@@ -155,7 +253,7 @@ classDiagram
     nodo1 --> nodo3 : der
 ```
 
-En este diagrama se visualizan las relaciones entre nodos en el ABB, donde cada nodo apunta a sus hijos izquierdos y derechos.
+En este diagrama se visualizan las relaciones entre nodos en el **ABB**, donde cada nodo apunta a sus hijos izquierdos y derechos.
 
 ---
 
