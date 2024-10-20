@@ -174,18 +174,17 @@ En este ejemplo:
 Si eliminamos el nodo con valor 10 del árbol:
 ```
 .      8
-      / \
-     3   13
-    / \    \
-   1   6    14
+      /  \
+     3    14
+    / \   /
+   1   6  13
       / \
      4   7
 ```
-El sucesor inorden de 10 (que es 13) lo reemplaza.
 
 ### Importancia de la Estructura y el Balanceo
 
-Un árbol binario de búsqueda es útil para manejar datos de manera eficiente, pero si el árbol se desbalancea, sus ventajas desaparecen, ya que su complejidad puede degenerarse a O(n). Para evitar esto, se utilizan estructuras como los **árboles balanceados** (AVL o Red-Black trees), que garantizan que la altura del árbol se mantenga en log(n) y que el ABB no se degenere en lista, asegurando tiempos óptimos para operaciones comunes.
+Un árbol binario de búsqueda es útil para manejar datos de manera eficiente, pero si el árbol se desbalancea, sus ventajas desaparecen, ya que su complejidad puede degenerarse a O(n). Para evitar esto, se utilizan estructuras como los **árboles balanceados** (AVL o Red-Black trees), que garantizan que la altura del árbol se mantenga en log(n) y que el ABB no se degenere en lista, asegurando tiempos óptimos para operaciones/primitivas comunes.
 
 En resumen:
 - **Árbol**: Una estructura básica con conexiones jerárquicas.
