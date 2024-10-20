@@ -11,7 +11,7 @@ nodo_t *nodo_crear(void *elemento)
 	return nodo;
 }
 
-static nodo_t *encontrar_maximo(nodo_t *nodo)
+static nodo_t *buscar_predecesor_inorden(nodo_t *nodo)
 {
 	while (nodo->der)
 		nodo = nodo->der;
@@ -94,7 +94,7 @@ static nodo_t *nodo_quitar(abb_t *abb, nodo_t *nodo, void *buscado,
 			return nodo_quitar_un_hijo(nodo);
 
 		// Caso: Nodo con dos hijos
-		nodo_t *max_nodo = encontrar_maximo(nodo->izq);
+		nodo_t *max_nodo = buscar_predecesor_inorden(nodo->izq);
 		void *temp = nodo->elemento;
 		nodo->elemento = max_nodo->elemento;
 		max_nodo->elemento = temp;
